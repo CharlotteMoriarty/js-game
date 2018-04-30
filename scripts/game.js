@@ -22,7 +22,7 @@ class NumberedBox extends createjs.Container {
 
 class GameData {
   constructor() {
-    this.amountOfBox = 20;
+    this.amountOfBox = 3;
     this.resetData();
   }
   resetData() {
@@ -35,7 +35,7 @@ class GameData {
     return (number === this.currentNumber);
   }
   isGameWin() {
-    return false;
+    return (this.currentNumber>this.amountOfBox);
   }
 }
 class Game{
@@ -61,7 +61,7 @@ class Game{
     // background
     this.stage.addChild(new lib.Background());
 
-    this.generateMultipleBoxes();
+    this.generateMultipleBoxes(this.GameData.amountOfBox);
   }
   version(){
     return '1.0.0';
@@ -80,8 +80,12 @@ class Game{
     if(this.GameData.isRightNumber(NumberedBox.number)){
     this.stage.removeChild(NumberedBox);
     this.GameData.nextNumber();
-  }
 
+    if(this.GameData.isGameWin()){
+      var gameOverView = new lib.GameOverView();
+      this.stage.addChild(gameOverView);
+    }
+  }
   } retinalize() {
       this.stage.width = this.canvas.width;
       this.stage.height = this.canvas.height;
