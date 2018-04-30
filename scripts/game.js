@@ -5,7 +5,7 @@ class NumberedBox extends createjs.Container {
     super();
 
     this.game = game;
-
+    this.number = number;
     var movieclip = new lib.NumberedBox();
     movieclip.numberText.text = number;
     this.addChild(movieclip);
@@ -20,6 +20,24 @@ class NumberedBox extends createjs.Container {
   }
 }
 
+class GameData {
+  constructor() {
+    this.amountOfBox = 20;
+    this.resetData();
+  }
+  resetData() {
+    this.currentNumber = 1;
+  }
+  nextNumber() {
+    this.currentNumber += 1;
+  }
+  isRightNumber(number) {
+    return (number === this.currentNumber);
+  }
+  isGameWin() {
+    return false;
+  }
+}
 class Game{
   constructor() {
     console.log(`Welcome to the game. Version ${this.version()}`);
@@ -34,6 +52,8 @@ class Game{
     createjs.Touch.enable(this.stage);
     this.retinalize();
     createjs.Ticker.setFPS(60);
+    //initalizacion
+    this.GameData = new GameData();
 
     // keep re-drawing the stage.
     createjs.Ticker.on("tick", this.stage);
@@ -56,8 +76,12 @@ class Game{
       movieclip.y = Math.random() * (this.stage.height - movieclip.getBounds().height);
     }
   }
-  handleClick(numberedBox) {
-    this.stage.removeChild(numberedBox);
+  handleClick(NumberedBox) {
+    if(this.GameData.isRightNumber(NumberedBox.number)){
+    this.stage.removeChild(NumberedBox);
+    this.GameData.nextNumber();
+  }
+
   } retinalize() {
       this.stage.width = this.canvas.width;
       this.stage.height = this.canvas.height;
