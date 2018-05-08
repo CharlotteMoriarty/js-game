@@ -7,7 +7,10 @@ class NumberedBox extends createjs.Container {
 
     var movieclip = new lib.NumberedBox();
     movieclip.numberText.text = number;
-
+    movieclip.numberText.font = "28px Oswald";
+    movieclip.numberText.textBaseline = "alphabet";//zabezpieczenie przed nieprawidłowym wyswietlaniem 
+    movieclip.numberText.x +=2;
+    movieclip.numberText.y =36;
     new createjs.ButtonHelper(movieclip, 0, 1, 2, false, new lib.NumberedBox(), 3);
 
     this.addChild(movieclip);
