@@ -1,3 +1,5 @@
+// logic for the Count game
+
 class NumberedBox extends createjs.Container {
   constructor(game, number=0) {
     super();
@@ -7,11 +9,11 @@ class NumberedBox extends createjs.Container {
 
     var movieclip = new lib.NumberedBox();
     movieclip.numberText.text = number;
+
     movieclip.numberText.font = "28px Oswald";
-    movieclip.numberText.textBaseline = "alphabet";//zabezpieczenie przed nieprawidłowym wyswietlaniem 
-    movieclip.numberText.x +=2;
-    movieclip.numberText.y =36;
-    new createjs.ButtonHelper(movieclip, 0, 1, 2, false, new lib.NumberedBox(), 3);
+    movieclip.numberText.textBaseline = "alphabet"; //zabezpieczenie przed różnicami w przeglądarkach
+    movieclip.numberText.x += 2;
+    movieclip.numberText.y = 35;
 
     this.addChild(movieclip);
 
@@ -28,7 +30,7 @@ class NumberedBox extends createjs.Container {
 // This class controls the game data.
 class GameData {
   constructor() {
-    this.amountOfBox = 20;
+    this.amountOfBox = 10;
     this.resetData();
   }
   resetData() {
@@ -55,8 +57,6 @@ class Game{
     this.stage.width = this.canvas.width;
     this.stage.height = this.canvas.height;
 
-    this.stage.enableMouseOver();
-
     // enable tap on touch device
     createjs.Touch.enable(this.stage);
 
@@ -71,13 +71,16 @@ class Game{
     // keep re-drawing the stage.
     createjs.Ticker.on("tick", this.stage);
 
-    // background
-    this.stage.addChild(new lib.Background());
-
-    this.generateMultipleBoxes(this.gameData.amountOfBox);
+    this.restartGame();
   }
   version(){
     return '1.0.0';
+  }
+  restartGame() {
+    this.gameData.resetData();
+    this.stage.removeAllChildren();
+    this.stage.addChild(new lib.Background());
+    this.generateMultipleBoxes(this.gameData.amountOfBox);
   }
   generateMultipleBoxes(amount=10) {
     for (var i=amount; i>0; i--) {
@@ -98,6 +101,10 @@ class Game{
       if (this.gameData.isGameWin()) {
         var gameOverView = new lib.GameOverView();
         this.stage.addChild(gameOverView);
+
+        gameOverView.restartButton.on('click', (function(){
+          this.restartGame();
+        }).bind(this));
       }
     }
   }
@@ -121,6 +128,5 @@ class Game{
   }
 }
 
-//alert("test");
 // start the game
 var game = new Game();
